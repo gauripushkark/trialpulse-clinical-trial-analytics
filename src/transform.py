@@ -86,7 +86,9 @@ def flatten_study(study: dict[str, Any]) -> dict[str, Any]:
         ),
         "completion_date": _get(status, "completionDateStruct", "date"),
         "first_post_date": _get(status, "studyFirstPostDateStruct", "date"),
-        "last_update_date": _get(status, "studyLastUpdatePostDateStruct", "date"),
+        "last_update_date": _get(
+    status, "lastUpdatePostDateStruct", "date"
+),
         "location_count": len(locations),
         "facility_count": len(set(facilities)),
         "country_count": len(countries),

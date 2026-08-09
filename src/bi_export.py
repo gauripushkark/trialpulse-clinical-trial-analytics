@@ -71,26 +71,88 @@ def build_bi_export(df: pd.DataFrame) -> pd.DataFrame:
 
     result["duration_years"] = result["study_duration_days"] / 365.25
 
-    result["duration_band"] = pd.cut(
-        result["duration_years"],
-        bins=[-np.inf, 2, 4, 6, np.inf],
-        labels=[
-            "Under 2 years",
-            "2–4 years",
-            "4–6 years",
-            "6+ years",
-        ],
+    result["duration_band"] = (
+        pd.cut(
+            result["duration_years"],
+            bins=[-np.inf, 2, 4, 6, np.inf],
+            labels=[
+                "Under 2 years",
+                "2–4 years",
+                "4–6 years",
+                "6+ years",
+            ],
+        )
+        .astype("object")
+        .fillna("Duration Unknown")
     )
 
-    result["enrollment_band"] = pd.cut(
-        result["enrollment"],
-        bins=[-np.inf, 50, 200, 500, np.inf],
-        labels=[
-            "50 or fewer",
-            "51–200",
-            "201–500",
-            "More than 500",
-        ],
+    result["enrollment_band"] = (
+        pd.cut(
+            result["enrollment"],
+            bins=[-np.inf, 50, 200, 500, np.inf],
+            labels=[
+                "50 or fewer",
+                "51–200",
+                "201–500",
+                "More than 500",
+            ],
+        )
+        .astype("object")
+        .fillna("Enrollment Unknown")
+    )
+
+    # -----------------------------
+    # Business Sort Orders
+    # -----------------------------
+
+    phase_order_map = {
+        "Early Phase I": 1,
+        "Phase I": 2,
+        "Phase I/II": 3,
+        "Phase II": 4,
+        "Phase II/III": 5,
+        "Phase III": 6,
+        "Phase IV": 7,
+        "Not specified": 99,
+    }
+
+    risk_order_map = {
+        "Low": 1,
+        "Moderate": 2,
+        "High": 3,
+        "Critical": 4,
+    }
+
+    duration_order_map = {
+        "Under 2 years": 1,
+        "2–4 years": 2,
+        "4–6 years": 3,
+        "6+ years": 4,
+        "Duration Unknown": 5,
+    }
+
+    enrollment_order_map = {
+        "50 or fewer": 1,
+        "51–200": 2,
+        "201–500": 3,
+        "More than 500": 4,
+        "Enrollment Unknown": 5,
+    }
+
+    result["phase_order"] = (
+        result["phase_clean"].map(phase_order_map).fillna(99).astype(int)
+    )
+
+    result["risk_order"] = (
+        result["risk_category"].map(risk_order_map).fillna(99).astype(int)
+    )
+
+    result["duration_band_order"] = (
+        result["duration_band"].map(duration_order_map).fillna(99).astype(int)
+    )
+
+    result["enrollment_band_order"] = (
+        result["enrollment_band"].map(enrollment_order_map).fillna(99).astype(int)
     )
 
     today = pd.Timestamp.today().normalize()

@@ -20,6 +20,7 @@ DEFAULT_FIELDS = [
     "Condition",
     "InterventionName",
     "LeadSponsorName",
+    "LeadSponsorClass",
     "EnrollmentCount",
     "EnrollmentType",
     "StartDate",
