@@ -286,6 +286,7 @@ Clone the repository:
 ```bash
 git clone https://github.com/gauripushkark/trialpulse-clinical-trial-analytics.git
 cd trialpulse-clinical-trial-analytics
+```
 
 Create a virtual environment:
 
